@@ -1,16 +1,13 @@
 package tests;
 
 import io.appium.java_client.AppiumBy;
-import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.android.AndroidDriver;
-import io.appium.java_client.android.AndroidTouchAction;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.PointerInput;
 import org.openqa.selenium.interactions.Sequence;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.testng.annotations.AfterTest;
-import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
 import java.net.MalformedURLException;
@@ -60,21 +57,14 @@ public class FirstAndroidTest {
 
     //uiautomationviewer requires PATH to contain: C:\Program Files\Android\Android Studio\jre\bin
     @Test
-    public void firstApiTest() throws MalformedURLException {
+    public void testDemo1() throws MalformedURLException {
         setUp("ApiDemos-debug.apk");
         driver.findElement(AppiumBy.accessibilityId("Graphics")).click();
         //System.out.println("Response is: ");
         assertEquals(driver.findElement(AppiumBy.accessibilityId("Arcs")).getText(),"Arcs");
     }
 
-    @Test
-    public void secondApiTest() throws MalformedURLException {
-        setUp("ApiDemos-debug.apk");
-        AppiumBy views = (AppiumBy) AppiumBy.accessibilityId("Views");
-        AppiumBy lists = (AppiumBy) AppiumBy.accessibilityId("Lists");
-
-        driver.findElement(views).click();
-
+    private void scrollDown() {
         Dimension windowSize = driver.manage().window().getSize();
         int dragSource = (int) (windowSize.getHeight() * 0.8);
         int dragDestination = (int) (windowSize.getHeight() * 0.2);
@@ -90,12 +80,77 @@ public class FirstAndroidTest {
 
         //Executing sequence two times (only one is not enough for the assert)
         driver.perform(Arrays.asList(sequence));
+
+    }
+
+    @Test
+    public void testDemo2() throws MalformedURLException {
+        setUp("ApiDemos-debug.apk");
+        AppiumBy views = (AppiumBy) AppiumBy.accessibilityId("Views");
+        AppiumBy lists = (AppiumBy) AppiumBy.accessibilityId("Lists");
+
+        driver.findElement(views).click();
+
+        scrollDown();
         //Missing a timer when the finger is going from up to down not touching the screen
-        driver.perform(Arrays.asList(sequence));
+        scrollDown();
 
         //Verifying if "Lists" element is present
         assertEquals(driver.findElement(lists).getText(),"Lists");
 
+    }
+
+    @Test
+    public void testDemoDragAndDrop() throws MalformedURLException {
+        setUp("ApiDemos-debug.apk");
+        driver.findElement(AppiumBy.accessibilityId("Views")).click();
+        driver.findElement(AppiumBy.accessibilityId("Drag and Drop")).click();
+
+        int startingX = driver.findElement(AppiumBy.id("drag_dot_1")).getLocation().getX();
+        int startingY = driver.findElement(AppiumBy.id("drag_dot_1")).getLocation().getY();
+
+        int endingX = driver.findElement(AppiumBy.id("drag_dot_2")).getLocation().getX();
+        int endingY = driver.findElement(AppiumBy.id("drag_dot_2")).getLocation().getY();
+
+        PointerInput finger = new PointerInput(PointerInput.Kind.TOUCH,"finger");
+        Sequence sequence = new Sequence(finger,1);
+
+        sequence.addAction(finger.createPointerMove(Duration.ofMillis(0),PointerInput.Origin.viewport(),startingX,startingY));
+        sequence.addAction(finger.createPointerDown(PointerInput.MouseButton.LEFT.asArg()));
+        sequence.addAction(finger.createPointerMove(Duration.ofMillis(1500),PointerInput.Origin.viewport(),endingX,endingY));
+        sequence.addAction(finger.createPointerUp(PointerInput.MouseButton.LEFT.asArg()));
+        //Going back to the begining (just as a "sleep")
+        //sequence.addAction(finger.createPointerMove(Duration.ofMillis(1000),PointerInput.Origin.viewport(),startingX,startingY));
+
+        driver.perform(Arrays.asList(sequence));
+    }
+
+    @Test
+    public void testDemoMoveGallery() throws MalformedURLException {
+        setUp("ApiDemos-debug.apk");
+        driver.findElement(AppiumBy.accessibilityId("Views")).click();
+        scrollDown();
+        assertEquals(driver.findElement(AppiumBy.accessibilityId("Gallery")).getText(),"Gallery");
+        driver.findElement(AppiumBy.accessibilityId("Gallery")).click();
+        driver.findElement(AppiumBy.accessibilityId("1. Photos")).click();
+
+        int startingX = driver.findElements(AppiumBy.className("android.widget.ImageView")).get(1).getLocation().getX();
+        int startingY = driver.findElements(AppiumBy.className("android.widget.ImageView")).get(1).getLocation().getY();
+
+        int endingX = driver.findElement(AppiumBy.className("android.widget.Gallery")).getLocation().getX() + 2;
+        int endingY = driver.findElement(AppiumBy.className("android.widget.Gallery")).getLocation().getY() + 2;
+
+        PointerInput finger = new PointerInput(PointerInput.Kind.TOUCH,"finger");
+        Sequence sequence = new Sequence(finger,1);
+
+        sequence.addAction(finger.createPointerMove(Duration.ofMillis(0),PointerInput.Origin.viewport(),startingX,startingY));
+        sequence.addAction(finger.createPointerDown(PointerInput.MouseButton.LEFT.asArg()));
+        sequence.addAction(finger.createPointerMove(Duration.ofMillis(1500),PointerInput.Origin.viewport(),endingX,endingY));
+        sequence.addAction(finger.createPointerUp(PointerInput.MouseButton.LEFT.asArg()));
+        //Going back to the begining (just as a "sleep")
+        //sequence.addAction(finger.createPointerMove(Duration.ofMillis(1000),PointerInput.Origin.viewport(),startingX,startingY));
+
+        driver.perform(Arrays.asList(sequence));
     }
 
     @Test
@@ -112,7 +167,9 @@ public class FirstAndroidTest {
     public void testSMS() throws MalformedURLException {
         setUp("com.android.messaging",".ui.conversationlist.ConversationListActivity");
 
-        driver.sendSMS("1235623571","hola");
+        String phoneNumber = "1235623571";
+
+        driver.sendSMS(phoneNumber,"hola");
         assertEquals("uno","uno");
     }
 
