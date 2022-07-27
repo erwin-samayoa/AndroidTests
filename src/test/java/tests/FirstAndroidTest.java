@@ -22,23 +22,31 @@ import java.util.List;
 import static org.testng.Assert.assertEquals;
 
 public class FirstAndroidTest {
-    private AppiumDriver driver;
+    //private AppiumDriver driver; //For general use
+    private AndroidDriver driver; //For SMS receiving simulation
 
-    @BeforeTest
-    public void setUp() throws MalformedURLException {
+    //@BeforeTest
+    public void setUp(String app, String... activity) throws MalformedURLException {
         DesiredCapabilities cap = new DesiredCapabilities();
         cap.setCapability("platformName","Android");
 
-        //cap.setCapability("platformVersion","9.0");
-        //cap.setCapability("app",System.getProperty("user.dir") + "/apps/ApiDemos-debug.apk");
-
-        //cap.setCapability("appPackage","com.android.calculator2");
-        //cap.setCapability("appActivity",".Calculator");
-
-
-        cap.setCapability("platformVersion","11");
-        cap.setCapability("appPackage","com.whatsapp");
-        cap.setCapability("appActivity",".HomeActivity");
+        switch (activity.length) {
+            case 0: //APK
+                cap.setCapability("app",System.getProperty("user.dir") + "/apps/" + app);
+                cap.setCapability("platformVersion","9.0"); //Emulator
+                break;
+            case 1: //App already installed (requires Activity)
+                cap.setCapability("appPackage",app);
+                cap.setCapability("appActivity",activity[0]);
+                cap.setCapability("platformVersion","9.0");
+                break;
+            case 2:
+            default: //App already installed and specific Android version
+                cap.setCapability("appPackage",app);
+                cap.setCapability("appActivity",activity[0]);
+                cap.setCapability("platformVersion",activity[1]); //Emulator
+                break;
+        }
 
         cap.setCapability("noReset",true); //Beware not setting this to true if you use and app like whatsapp
 
@@ -52,14 +60,16 @@ public class FirstAndroidTest {
 
     //uiautomationviewer requires PATH to contain: C:\Program Files\Android\Android Studio\jre\bin
     @Test
-    public void firstApiTest() {
+    public void firstApiTest() throws MalformedURLException {
+        setUp("ApiDemos-debug.apk");
         driver.findElement(AppiumBy.accessibilityId("Graphics")).click();
-        System.out.println("Response is: ");
+        //System.out.println("Response is: ");
         assertEquals(driver.findElement(AppiumBy.accessibilityId("Arcs")).getText(),"Arcs");
     }
 
     @Test
-    public void secondApiTest() {
+    public void secondApiTest() throws MalformedURLException {
+        setUp("ApiDemos-debug.apk");
         AppiumBy views = (AppiumBy) AppiumBy.accessibilityId("Views");
         AppiumBy lists = (AppiumBy) AppiumBy.accessibilityId("Lists");
 
@@ -89,7 +99,8 @@ public class FirstAndroidTest {
     }
 
     @Test
-    public void secondCalcTest7x7() {
+    public void secondCalcTest7x7() throws MalformedURLException {
+        setUp("com.android.calculator2",".Calculator");
         driver.findElement(AppiumBy.id("digit_7")).click();
         driver.findElement(AppiumBy.id("op_mul")).click();
         driver.findElement(AppiumBy.id("digit_7")).click();
@@ -98,8 +109,18 @@ public class FirstAndroidTest {
     }
 
     @Test
-    public void testWhatsApp() {
-        //Not yet working
+    public void testSMS() throws MalformedURLException {
+        setUp("com.android.messaging",".ui.conversationlist.ConversationListActivity");
+
+        driver.sendSMS("1235623571","hola");
+        assertEquals("uno","uno");
+    }
+
+    @Test
+    public void testWhatsApp() throws MalformedURLException {
+
+        setUp("com.whatsapp",".HomeActivity","11");
+
         String contactToSend = "yyy";
         driver.findElement(AppiumBy.accessibilityId("Buscar")).click();
         driver.findElement(AppiumBy.id("search_input")).sendKeys(contactToSend);
