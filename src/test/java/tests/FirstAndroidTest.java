@@ -28,23 +28,24 @@ public class FirstAndroidTest {
     public void setUp() throws MalformedURLException {
         DesiredCapabilities cap = new DesiredCapabilities();
         cap.setCapability("platformName","Android");
-        cap.setCapability("platformVersion","9.0");
 
-        cap.setCapability("app",System.getProperty("user.dir") + "/apps/ApiDemos-debug.apk");
-
-        //cap.setCapability("platformVersion","11");
+        //cap.setCapability("platformVersion","9.0");
+        //cap.setCapability("app",System.getProperty("user.dir") + "/apps/ApiDemos-debug.apk");
 
         //cap.setCapability("appPackage","com.android.calculator2");
         //cap.setCapability("appActivity",".Calculator");
 
-        //cap.setCapability("appPackage","com.whatsapp");
-        //cap.setCapability("appActivity",".HomeActivity");
+
+        cap.setCapability("platformVersion","11");
+        cap.setCapability("appPackage","com.whatsapp");
+        cap.setCapability("appActivity",".HomeActivity");
 
         cap.setCapability("noReset",true); //Beware not setting this to true if you use and app like whatsapp
 
 
 
         driver = new AndroidDriver(new URL("http://localhost:4723/wd/hub"),cap);
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
 
 
     }
@@ -101,24 +102,35 @@ public class FirstAndroidTest {
         //Not yet working
         String contactToSend = "yyy";
         driver.findElement(AppiumBy.accessibilityId("Buscar")).click();
-        driver.findElement(AppiumBy.id("com.whatsapp:id/search_input")).sendKeys(contactToSend);
+        driver.findElement(AppiumBy.id("search_input")).sendKeys(contactToSend);
+        WebElement contact = null;
 
-        List<WebElement> elements = driver.findElements(AppiumBy.className("android.widget.FrameLayout"));
+        List<WebElement> elements = driver.findElements(AppiumBy.id("conversations_row_contact_name"));
 
+        //Locating contact from list (even filtered driver detects full list)
         for(WebElement element: elements) {
-            System.out.println(element.findElement(AppiumBy.className("android.widget.TextView")).getText());
+
+            if (element.getText().toLowerCase().contains(contactToSend.toLowerCase())) {
+                contact = element;
+                System.out.println(element.getText());
+                break;
+            }
         }
 
-        /*
-        driver.findElement(AppiumBy.id("com.whatsapp:id/contact_row_container")).click();
+        if (contact != null) {
 
-        for(int i = 0; i<10;i++) {
-            driver.findElement(AppiumBy.id("com.whatsapp:id/entry")).sendKeys("El " + contactToSend + " es chotito " + i);
-            driver.findElement(AppiumBy.accessibilityId("Enviar")).click();
+                contact.click();
+
+            for(int i = 0; i<10;i++) {
+                driver.findElement(AppiumBy.id("com.whatsapp:id/entry")).sendKeys("Prueba " + contactToSend + " es chotito " + (i+1));
+
+                driver.findElement(AppiumBy.accessibilityId("Enviar")).click();
+
+            }
+
 
         }
 
-         */
     }
 
     @AfterTest
