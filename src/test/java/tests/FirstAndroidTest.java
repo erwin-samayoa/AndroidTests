@@ -168,9 +168,10 @@ public class FirstAndroidTest {
         setUp("com.android.messaging",".ui.conversationlist.ConversationListActivity");
 
         String phoneNumber = "1235623571";
+        String message = "hola1";
 
-        driver.sendSMS(phoneNumber,"hola");
-        assertEquals("uno","uno");
+        driver.sendSMS(phoneNumber,message);
+        assertEquals(driver.findElements(AppiumBy.id("conversation_snippet")).get(0).getText(),message);
     }
 
     @Test
