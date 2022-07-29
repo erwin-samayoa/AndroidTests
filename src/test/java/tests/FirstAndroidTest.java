@@ -2,14 +2,19 @@ package tests;
 
 import io.appium.java_client.AppiumBy;
 import io.appium.java_client.android.AndroidDriver;
+import org.openqa.selenium.By;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.PointerInput;
 import org.openqa.selenium.interactions.Sequence;
 import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.Test;
 
+import java.io.File;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.Duration;
@@ -172,6 +177,25 @@ public class FirstAndroidTest {
 
         driver.sendSMS(phoneNumber,message);
         assertEquals(driver.findElements(AppiumBy.id("conversation_snippet")).get(0).getText(),message);
+    }
+
+    @Test
+    public void testPic() throws IOException {
+        setUp("com.android.gallery3d",".app.Gallery");
+
+        By appGeneralViewElement = AppiumBy.id("gl_root_view");
+        By photoViewElement = AppiumBy.id("photopage_bottom_controls");
+
+        File archivo = new File("C:\\Users\\User\\Downloads\\logo-TAU-gold-poweredby-applitools-467x105.png");
+        driver.pushFile("/sdcard/Pictures/archivo.png",archivo);
+
+        var wait = new WebDriverWait(driver,Duration.ofSeconds(20));
+
+        wait.until(ExpectedConditions.presenceOfElementLocated(appGeneralViewElement)).click();
+        wait.until(ExpectedConditions.presenceOfElementLocated(photoViewElement));
+
+
+
     }
 
     @Test
