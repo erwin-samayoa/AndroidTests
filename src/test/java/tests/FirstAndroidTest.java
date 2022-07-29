@@ -25,7 +25,7 @@ import static org.testng.Assert.assertEquals;
 
 public class FirstAndroidTest {
     //private AppiumDriver driver; //For general use
-    private AndroidDriver driver; //For SMS receiving simulation
+    private AndroidDriver driver; //For SMS receiving simulation, clipboard maybe
 
     //@BeforeTest
     public void setUp(String app, String... activity) throws MalformedURLException {
@@ -195,6 +195,23 @@ public class FirstAndroidTest {
         wait.until(ExpectedConditions.presenceOfElementLocated(photoViewElement));
 
 
+
+    }
+
+    @Test
+    public void testClipboard() throws MalformedURLException {
+        setUp("com.android.messaging",".ui.conversationlist.ConversationListActivity");
+        By element968 = AppiumBy.xpath("//*[contains(@text,'968')]");
+        By messageElement = AppiumBy.id("message_text");
+        By boxElement = AppiumBy.id("compose_message_text");
+
+        driver.findElement(element968).click();
+        String textToVerify = driver.findElement(messageElement).getText();
+        driver.setClipboardText(textToVerify);
+
+        driver.findElement(boxElement).sendKeys(driver.getClipboardText());
+
+        assertEquals(driver.findElement(boxElement).getText(),textToVerify);
 
     }
 
