@@ -18,8 +18,10 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
 import static org.testng.Assert.assertEquals;
 
@@ -91,8 +93,8 @@ public class FirstAndroidTest {
     @Test
     public void testDemo2() throws MalformedURLException {
         setUp("ApiDemos-debug.apk");
-        AppiumBy views = (AppiumBy) AppiumBy.accessibilityId("Views");
-        AppiumBy lists = (AppiumBy) AppiumBy.accessibilityId("Lists");
+        By views = AppiumBy.accessibilityId("Views");
+        By lists = AppiumBy.accessibilityId("Lists");
 
         driver.findElement(views).click();
 
@@ -161,6 +163,7 @@ public class FirstAndroidTest {
     @Test
     public void secondCalcTest7x7() throws MalformedURLException {
         setUp("com.android.calculator2",".Calculator");
+
         driver.findElement(AppiumBy.id("digit_7")).click();
         driver.findElement(AppiumBy.id("op_mul")).click();
         driver.findElement(AppiumBy.id("digit_7")).click();
@@ -172,12 +175,25 @@ public class FirstAndroidTest {
     public void testSMS() throws MalformedURLException {
         setUp("com.android.messaging",".ui.conversationlist.ConversationListActivity");
 
+        By conversation = AppiumBy.id("conversation_snippet");
+        By moreOptionsElement = AppiumBy.accessibilityId("More options");
+
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+
         String phoneNumber = "1235623571";
         String message = "hola1";
 
         driver.sendSMS(phoneNumber,message);
-        assertEquals(driver.findElements(AppiumBy.id("conversation_snippet")).get(0).getText(),message);
+        var elementToProcess = driver.findElements(conversation).get(0);
+        assertEquals(elementToProcess.getText(),message);
+        elementToProcess.click();
+        wait.until(ExpectedConditions.elementToBeClickable(moreOptionsElement)).click();
+        driver.findElement(AppiumBy.xpath("//android.widget.TextView[@text='Delete']")).click();
+        assertEquals(driver.findElement(AppiumBy.xpath("//android.widget.Button[@text='DELETE']")).getText(),"DELETE");
+        driver.findElement(AppiumBy.xpath("//android.widget.Button[@text='DELETE']")).click();
     }
+
+
 
     @Test
     public void testPic() throws IOException {
@@ -259,6 +275,8 @@ public class FirstAndroidTest {
             driver.quit();
         }
     }
+
+
 
 
 }
