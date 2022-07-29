@@ -13,8 +13,10 @@ import org.testng.annotations.Test;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
 import static org.testng.Assert.assertEquals;
 
@@ -167,12 +169,20 @@ public class FirstAndroidTest {
     public void testSMS() throws MalformedURLException {
         setUp("com.android.messaging",".ui.conversationlist.ConversationListActivity");
 
+        AppiumBy conversation = (AppiumBy) AppiumBy.id("conversation_snippet");
+
         String phoneNumber = "1235623571";
         String message = "hola1";
 
         driver.sendSMS(phoneNumber,message);
-        assertEquals(driver.findElements(AppiumBy.id("conversation_snippet")).get(0).getText(),message);
+        var elementToProcess = driver.findElements(conversation).get(0);
+        assertEquals(elementToProcess.getText(),message);
+        elementToProcess.click();
+        driver.findElement(AppiumBy.accessibilityId("More options")).click();
+        driver.findElements(AppiumBy.id("title")).get(3).click();
     }
+
+
 
     @Test
     public void testWhatsApp() throws MalformedURLException {
@@ -218,6 +228,8 @@ public class FirstAndroidTest {
             driver.quit();
         }
     }
+
+
 
 
 }
