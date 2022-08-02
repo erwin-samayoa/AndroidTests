@@ -18,10 +18,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.Duration;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 import static org.testng.Assert.assertEquals;
 
@@ -268,6 +265,41 @@ public class FirstAndroidTest {
 
 
         }
+
+    }
+
+    private void changeContext() {
+        Set<String> contexts = driver.getContextHandles();
+
+        //System.out.println(driver.getContext()); //is NATIVE_APP
+
+        for (String context: contexts) {
+            if (context.contains("webview_shell")) {
+                driver.context(context);
+            }
+            //System.out.println(context);
+        }
+    }
+
+    @Test
+    public void testHibrid( ) throws MalformedURLException {
+        //This kind is for testing hibrid apps (apps + webviews)
+        //For mobile web better to check BrowserTests class (access trough browserName capability)
+        //Opening this app (which seems to be the default browser in the used device)
+        setUp("org.chromium.webview_shell", "WebViewBrowserActivity");
+        //Going to URL
+        driver.findElement(AppiumBy.id("url_field")).sendKeys("https://testpages.herokuapp.com/styled/find-by-playground-test.html");
+        driver.findElement(AppiumBy.accessibilityId("Load URL")).click();
+        //Switching context
+        changeContext(); //It seems to need a change of context to allow acces to web elements (web elements like from a page or web container)
+
+        //This one is too slow and next statement fail
+        //driver.get("https://testpages.herokuapp.com/styled/find-by-playground-test.html");
+
+        driver.findElement(By.linkText("jump to para 4")).click();
+
+        //Going back to original context
+        driver.context("NATIVE_APP");
 
     }
 
