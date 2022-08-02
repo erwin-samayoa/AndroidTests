@@ -187,8 +187,10 @@ public class FirstAndroidTest {
         elementToProcess.click();
         wait.until(ExpectedConditions.elementToBeClickable(moreOptionsElement)).click();
         driver.findElement(AppiumBy.xpath("//android.widget.TextView[@text='Delete']")).click();
+
         assertEquals(driver.findElement(AppiumBy.xpath("//android.widget.Button[@text='DELETE']")).getText(),"DELETE");
-        driver.findElement(AppiumBy.xpath("//android.widget.Button[@text='DELETE']")).click();
+        //driver.findElement(AppiumBy.xpath("//android.widget.Button[@text='DELETE']")).click();
+        driver.switchTo().alert().accept(); //Is better to use this one, no?
     }
 
 
