@@ -4,11 +4,14 @@ import PageObjects.*;
 import io.appium.java_client.AppiumBy;
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.android.AndroidDriver;
+import org.json.simple.parser.ParseException;
 import org.openqa.selenium.By;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterTest;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
+import tools.JsonReader;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -235,8 +238,13 @@ public class FirstAndroidTest {
 
     }
 
-    @Test
-    public void testSMS() throws MalformedURLException {
+    @DataProvider(name = "sms data")
+    public Object[][] passData() throws IOException, ParseException {
+        return JsonReader.getJsonData(System.getProperty("user.dir") + "/data/SMSData.json");
+    }
+
+    @Test(dataProvider = "sms data")
+    public void testSMS(String phoneNumber, String message) throws MalformedURLException {
 
         /*
         //No PoM
@@ -266,8 +274,11 @@ public class FirstAndroidTest {
         //PoM
         MessengerPage messenger = new MessengerPage(setUp("com.android.messaging",".ui.conversationlist.ConversationListActivity"));
 
+        /*
         String phoneNumber = "1235623571";
         String message = "hola1";
+        */
+         
 
         messenger.sendSMS(phoneNumber,message);
 
