@@ -1,0 +1,16 @@
+{
+  "SMS Data": [
+    {
+      "Number" : "1234567890",
+      "Message" : "Test1"
+    },
+    {
+      "Number" : "1234567891",
+      "Message" : "Test2"
+    },
+    {
+      "Number" : "1234567892",
+      "Message" : "Test3"
+    }
+  ]
+}
