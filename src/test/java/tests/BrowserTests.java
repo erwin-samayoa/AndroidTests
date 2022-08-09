@@ -1,5 +1,6 @@
 package tests;
 
+import PageObjects.WebBrowserPage;
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.android.AndroidDriver;
 import org.openqa.selenium.By;
@@ -12,10 +13,18 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 public class BrowserTests {
+
+    //Web mobile tests
+    //Similar to BrowserPage, BrowserPage is for native browser app in android in hibrid tests (app + inner html)
+    //But this class (with PoM WebBrowserPage) is for opening browser using MOBILE appium capability, this one allows to work with web pages like if in selenium using a mobile device
+
+    //Appium requires to be started with selenium parameter for example:
+    // appium --chromedriver-executable C:\Users\User\chromedriver.exe
+
     private AppiumDriver driver;
 
-    @BeforeClass
-    public void setUp() throws MalformedURLException {
+    public AppiumDriver setUp() throws MalformedURLException {
+
         DesiredCapabilities caps = new DesiredCapabilities();
         caps.setCapability("platformName","Android");
         //needed in my device without chrome
@@ -35,18 +44,21 @@ public class BrowserTests {
 
         driver = new AndroidDriver(new URL("http://localhost:4723/wd/hub"), caps);
 
-
+        return driver;
 
     }
 
     @Test
-    public void testBrowser1() {
-        driver.get("https://testpages.herokuapp.com/styled/find-by-playground-test.html");
+    public void testBrowser1() throws MalformedURLException {
+        WebBrowserPage webBrowserPage = new WebBrowserPage(setUp());
+        webBrowserPage.navigate("https://testpages.herokuapp.com/styled/find-by-playground-test.html");
         driver.findElement(By.linkText("jump to para 4")).click();
     }
 
     @AfterClass
     public void tearDown() {
+        //I dont know how to manage this in PoM
+        //Considering the setUp method (in this same class) instantiated the driver
         driver.quit();
     }
 }
