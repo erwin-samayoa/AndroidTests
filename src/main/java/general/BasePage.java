@@ -21,7 +21,7 @@ import java.util.Set;
 
 public class BasePage {
     protected AppiumDriver driver;
-    public static final Duration TIMEOUT = Duration.ofSeconds(10);
+    public static final Duration TIMEOUT = Duration.ofSeconds(30);
 
     //Constructor
 
