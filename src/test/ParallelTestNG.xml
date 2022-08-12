@@ -1,0 +1,7 @@
+<suite name="Suite test parallel appium" parallel="methods" thread-count="5">
+    <test name="test parallel appium" >
+        <classes>
+            <class name="tests.ParallelTests" />
+        </classes>
+    </test>
+</suite>

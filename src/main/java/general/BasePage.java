@@ -21,7 +21,7 @@ import java.util.Set;
 
 public class BasePage {
     protected AppiumDriver driver;
-    public static final Duration TIMEOUT = Duration.ofSeconds(30);
+    public static final Duration TIMEOUT = Duration.ofSeconds(15);
 
     //Constructor
 
@@ -34,7 +34,7 @@ public class BasePage {
 
     private void waitForClick(WebElement elementToWaitFor) {
         WebDriverWait wait = new WebDriverWait(driver,TIMEOUT);
-        wait.until(ExpectedConditions.elementToBeClickable(elementToWaitFor));
+        wait.until(ExpectedConditions.and(ExpectedConditions.visibilityOf(elementToWaitFor),ExpectedConditions.elementToBeClickable(elementToWaitFor)));
     }
 
     private void waitForClick(By element) {
@@ -178,6 +178,15 @@ public class BasePage {
     public String getTextFromClipboard() {
         AndroidDriver driverForClipboard = (AndroidDriver) driver;
         return driverForClipboard.getClipboardText();
+    }
+
+    public void waitSeconds(int seconds) {
+        try {
+            Thread.sleep(seconds * 1000);
+        } catch (InterruptedException e) {
+            System.out.println("Sleep aborted");
+            e.printStackTrace();
+        }
     }
 
 }
