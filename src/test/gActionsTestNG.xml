@@ -1,0 +1,7 @@
+<suite name="Suite test parallel appium">
+    <test name="test parallel appium" >
+        <classes>
+            <class name="tests.FirstAndroidTest" />
+        </classes>
+    </test>
+</suite>
