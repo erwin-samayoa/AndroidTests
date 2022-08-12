@@ -39,4 +39,4 @@ jobs:
         target: ${{ matrix.target }}
         arch: x86_64
         profile: Nexus 6
-        script: mvn clean test -Pandroid
+        script: mvn clean test -DsuiteFile=src/test/gActionsTestNG.xml
