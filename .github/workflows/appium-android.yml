@@ -40,5 +40,3 @@ jobs:
         arch: x86_64
         profile: Nexus 6
         script: mvn clean test -Pandroid
-    - name: Build with Maven
-      run: mvn -B package --file pom.xml
