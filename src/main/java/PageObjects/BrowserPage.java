@@ -40,7 +40,8 @@ public class BrowserPage extends BasePage {
         enterWeb();
         if (driverForAndroid != null) {
             //Because of specific Android features it seems it needs a whole set of upper methods in BasePage to work with the AndroidDriver instead of AppiumDriver
-            driverForAndroid.findElement(By.linkText("jump to para 4")).click();
+            //driverForAndroid.findElement(By.linkText(textOfLink)).click(); //Not suported on guthub/reactivecircus
+            driverForAndroid.findElement(By.xpath("//a[contains(.,'" + textOfLink +"')]")).click();
         }
         exitWeb();
     }
