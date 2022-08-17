@@ -52,7 +52,7 @@ public class BaseTests extends AbstractTestNGCucumberTests {
 
     }
 
-    @AfterTest
+    //@AfterTest
     public void tearDown() {
         //I dont know how to manage this in PoM
         //Considering the setUp method (in this same class) instantiated the driver

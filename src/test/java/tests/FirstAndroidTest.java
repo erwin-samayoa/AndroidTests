@@ -16,7 +16,8 @@ public class FirstAndroidTest extends BaseTests {
 
 
 
-    //uiautomationviewer requires PATH to contain: C:\Program Files\Android\Android Studio\jre\bin
+    //uiautomationviewer.bat requires PATH to contain: C:\Program Files\Android\Android Studio\jre\bin
+
     @Test
     public void testDemo1() throws MalformedURLException {
 
