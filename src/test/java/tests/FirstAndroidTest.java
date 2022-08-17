@@ -16,7 +16,8 @@ public class FirstAndroidTest extends BaseTests {
 
 
 
-    //uiautomationviewer requires PATH to contain: C:\Program Files\Android\Android Studio\jre\bin
+    //uiautomationviewer.bat requires PATH to contain: C:\Program Files\Android\Android Studio\jre\bin
+
     @Test
     public void testDemo1() throws MalformedURLException {
 
@@ -296,10 +297,10 @@ public class FirstAndroidTest extends BaseTests {
          */
 
         //PoM
-        //Requires a message from number including 968
+        testSMS("1234567890","Hola");//Requires a message from number including 123
         MessengerPage messengerPage = new MessengerPage(setUp("com.android.messaging",".ui.conversationlist.ConversationListActivity"));
 
-        MessagePage messagePage = messengerPage.clickMessage(messengerPage.findMessageFrom("968"));
+        MessagePage messagePage = messengerPage.clickMessage(messengerPage.findMessageFrom("123"));
 
         String textToVerify = messagePage.getMessage();
         messagePage.setTextToClipboard(textToVerify);
